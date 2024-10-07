@@ -13,12 +13,9 @@ library (tidyverse)
 library (here)
 ```
 
-## data types for Tomato 
-Plant number - nominal
-Treatment - binary/nominal
-Num flowers - discrete
-Tomato yield fruits - discrete
-Avg Tomato Weight g - ration
+## data types for Tomato
+
+Plant number - nominal Treatment - binary/nominal Num flowers - discrete Tomato yield fruits - discrete Avg Tomato Weight g - ration
 
 ```{r}
 tomatoes <- read.csv (here ("data", "tomato_data.csv"))
@@ -34,11 +31,46 @@ fixTreatment <- which (tomatoes$Treatment == ("fertilizer"))
   tomatoes$Treatment <- factor (tomatoes$Treatment)
 ```
 
+## summary ()
+
 ```{r}
 test <- c(2,4,6,8,10,12,14,16,18,20)
 summary (test)
 ```
 
+manually calculate summary values of this data set graze \<- c(90,94,96,90,84,86) 84,86,90,90,94,96
 
+min =84 max =96 mean (96+84)/2 =90 median =90 1Q (96-84)(0.25)+84 =87 3Q (96-84)(0.75)+84 =93
 
+```{r}
+grades <- c(90,94,96,90,84,86)
+summary (grades)
+```
 
+yayyy! we got the same values
+
+```{r}
+quantile(grades, probs = c(0, 0.25, 0.5, 0.75, 1))
+```
+
+this gives the quantile values at the portions we want, we gave it quarters but could do something else
+
+```{r}
+quantile(grades, probs = c(0, 0.33,0.66, 1))
+```
+
+## back to Tomato Data with dplyr package
+```{r}
+# Write a line of code that returns just the column with number of flowers
+
+```
+
+Write a line of code that returns the 3rd through 8th rows of data
+Write a line of code that returns only the data that were from the control treatment in the experiment
+Write a line of code that returns plants from the fertilized treatment that had at least 27 flowers
+Write code to determine the mean number of flowers in the control treatment plants
+Write code to determine the mean weight of tomatoes from the fertilizer treatment plants
+Use piping to do the following:
+Create a new variable called "big_toms" that consists of a data frame consisting of a single column of only the plant numbers from plants that produced fruit with a mean weight of 150 g or more
+Use group_by and summarize to determine the mean number of flower produced in the control and treatment groups
+Use group_by and summarize to determine the mean and standard deviation in mean fruit size (grams) between control and fertilized plants and save the result in a dataframe called TomatoSizes
