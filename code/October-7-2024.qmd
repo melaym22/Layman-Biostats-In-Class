@@ -1,0 +1,44 @@
+---
+title: "October-7-2024"
+author: "ML"
+format: html
+editor: visual
+---
+
+Oct 7 In Class Excercise 1
+
+```{r}
+rm(list = ls())
+library (tidyverse)
+library (here)
+```
+
+## data types for Tomato 
+Plant number - nominal
+Treatment - binary/nominal
+Num flowers - discrete
+Tomato yield fruits - discrete
+Avg Tomato Weight g - ration
+
+```{r}
+tomatoes <- read.csv (here ("data", "tomato_data.csv"))
+tomatoes$Plant_number<- as.factor (tomatoes$Plant_number)
+tomatoes$Treatment<- as.factor (tomatoes$Treatment)
+levels (tomatoes$Treatment)
+
+fixTreatment <- which (tomatoes$Treatment == ("control")) 
+  tomatoes$Treatment [fixTreatment] <- "Control"
+fixTreatment <- which (tomatoes$Treatment == ("fertilizer")) 
+  tomatoes$Treatment [fixTreatment] <- "Fertilizer"
+
+  tomatoes$Treatment <- factor (tomatoes$Treatment)
+```
+
+```{r}
+test <- c(2,4,6,8,10,12,14,16,18,20)
+summary (test)
+```
+
+
+
+
