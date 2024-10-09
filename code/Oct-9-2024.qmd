@@ -32,12 +32,26 @@ tomatoes %>%
     View()
 ```
 
-Write a line of code that finds all of the plants from the fertilizer treatment with avg_tomato_weight_g > or equal to 145 g.
+Write a line of code that finds all of the plants from the fertilizer treatment with avg_tomato_weight_g \> or equal to 145 g.
+
 ```{r}
 tomatoes %>%
   filter (Avg_tomato_weight_g>=145)
 
 ```
 
+save changes to the dataset to a new file in an output folder
+
+```{r}
+dir.create(here("outputs"))
+```
+
+now save the file
+
+```{r}
+write.csv(tomatoes,here("outputs", "tomatoes_fixed.csv"),row.names=FALSE) # prevents an extra column with row numbers to the file
+tomatoes2<-read.csv(here("outputs", "tomatoes_fixed.csv"))
 
 
+
+```
