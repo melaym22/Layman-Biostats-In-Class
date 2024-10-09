@@ -1,0 +1,43 @@
+---
+title: "Oct-9-2024"
+author: "ML"
+format: html
+editor: visual
+---
+
+10/09/2024
+
+## Exercise 1
+
+Warmup
+
+set things up and read in tomato data
+
+```{r}
+rm(list = ls()) #clears environment
+# establish packages
+library (tidyverse)
+library (here)
+```
+
+```{r}
+tomatoes <- read.csv (here("data", "tomato_data.csv")) 
+```
+
+Write a line of code that returns the 3rd, 7th, and 9th rows of data.
+
+```{r}
+tomatoes %>%
+  slice (c(3,7,9)) %>%
+    View()
+```
+
+Write a line of code that finds all of the plants from the fertilizer treatment with avg_tomato_weight_g > or equal to 145 g.
+```{r}
+tomatoes %>%
+  filter (Avg_tomato_weight_g>=145)
+
+```
+
+
+
