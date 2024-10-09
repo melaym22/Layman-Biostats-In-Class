@@ -51,7 +51,37 @@ now save the file
 ```{r}
 write.csv(tomatoes,here("outputs", "tomatoes_fixed.csv"),row.names=FALSE) # prevents an extra column with row numbers to the file
 tomatoes2<-read.csv(here("outputs", "tomatoes_fixed.csv"))
+```
 
+## NoCoLead Data
 
+```{r}
+# read in data
+lead <- read.csv (here ("data", "NoCoLead.csv"))
+```
+
+find avg num of tests given in the data set
+
+```{r}
+lead %>% 
+  summarise(
+      meantests=mean(num_tests)
+      ) %>%
+        View()
+```
+
+find and save the avg num of tests per year
+
+```{r}
+leadsummary <-lead %>%
+ group_by(Year)%>%
+   summarise(
+    meantestsyearly=mean(num_tests)
+      )
+```
+
+find the
+
+```{r}
 
 ```
