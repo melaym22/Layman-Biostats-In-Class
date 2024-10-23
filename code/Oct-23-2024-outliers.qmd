@@ -80,6 +80,13 @@ squirrels %>% arrange(total_length_mm) %>% tail(10) %>% View()
 Try body mass first
 
 ```{r}
+# make a histogram
+squirrels %>%
+    ggplot(aes(body_mass_g))+
+    geom_histogram()
+```
+
+```{r}
 squirrels %>% 
   ggplot(aes(age, body_mass_g))+
   geom_boxplot(outlier.color = "red")+
@@ -94,6 +101,13 @@ squirrels %>%
   ggplot(aes(age, total_length_mm))+
   geom_boxplot(outlier.color = "red")+
   facet_wrap(~sex)
+```
+
+Okay now we are going to use the adult female high body length outlier and we'll fix that outlier to be NA .
+
+```{r}
+fixlength <- which (squirrels$total_length_mm >= 800 )
+squirrels$total_length_mm [fixlength] <- NA
 ```
 
 ### Interquartile range method
