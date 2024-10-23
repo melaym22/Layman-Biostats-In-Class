@@ -1,0 +1,66 @@
+---
+title: "10/4/2024InClass"
+author: "Maggie Layman"
+format: html
+editor: visual
+---
+
+Read in the Data
+
+```{r}
+rm (list = ls())
+
+library (tidyverse)
+library (here)
+
+drugs <- read.csv (here("data", "drug_resistance.csv"))
+
+str(drugs)
+
+drugs$Treatment <- as.factor (drugs$Treatment)
+levels (drugs$Treatment)
+
+```
+
+Now fix the treament variable learn to use which or %in% which returns row #s Treatment - control, kontrol, cantrol, CONTROL drugs\$Treatment\[2\] or drugs \[2,1\]: accesses "kontrol"
+
+Find the rows that have any version of "control" using which ()
+
+```{r}
+fix <- which (drugs$Treatment %in% c("cantrol", "control", "Control")) # fix is a vector with rows i need to repair
+drugs$Treatment [fix] <- "control"
+levels(drugs$Treatment)
+# levels won't relist them unless written like this:
+drugs$Treatment <- factor (drugs$Treatment) # this just tells R to relist the levels of my factor now that they have changed
+```
+
+```{r}
+fix2 <- which (drugs$Treatment %in% c("drug x 2", "drug2", "Drugx2")) # fix is a vector with rows i need to repair
+drugs$Treatment [fix2] <- "drug x 2"
+```
+
+```{r}
+fix3 <- which (drugs$Treatment %in% c("drug x 3", "drug3", "Drug x 3")) # fix is a vector with rows i need to repair
+drugs$Treatment [fix3] <- "drug x 3"
+```
+
+```{r}
+drugs$tech.name <- as.factor (drugs$tech.name)
+levels (drugs$tech.name)
+```
+
+```{r}
+fixname <- which (drugs$tech.name %in% c("brain", "brian", "Brian")) 
+drugs$tech.name [fixname] <- "Brian"
+```
+
+```{r}
+fixname2 <- which (drugs$tech.name %in% c("becca", "Becca")) 
+drugs$tech.name [fixname2] <- "Becca"
+```
+
+```{r}
+fixname3 <- which (drugs$tech.name %in% c("jose")) 
+drugs$tech.name [fixname3] <- "Jose"
+
+```

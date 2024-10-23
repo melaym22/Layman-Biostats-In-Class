@@ -62,7 +62,7 @@ quantile(grades, probs = c(0, 0.33,0.66, 1))
 ## back to Tomato Data with dplyr package
 ```{r}
 # Write a line of code that returns just the column with number of flowers
-
+select (tomatoes)
 ```
 
 Write a line of code that returns the 3rd through 8th rows of data
