@@ -83,4 +83,4 @@ fat %>%
 
 p is very low, we reject the null hypothesis (t = 2.8632, df = 20.957, p-value = 0.00932)
 
-it is very likely that there is a signifcant difference in body mass percent between genders
+it is very likely that men have significantly less body fat than women
