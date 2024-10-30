@@ -33,7 +33,7 @@ Use the information you learned from reading chapter 5 and doing homework 21 to 
 ```{r}
 
 ggplot(fat,aes(x=body_fat_percent))+
-  geom_histogram(binwidth=10)+
+  geom_histogram(binwidth=5)+
   facet_wrap(~gender,ncol=1) 
   theme_bw()
 ```
@@ -53,9 +53,10 @@ ggplot (fat, aes (x=gender,y=body_fat_percent))+
 fat %>%
   group_by(gender)%>%
   summarise(
-    mean(body_fat_percent),
-    sd (body_fat_percent)
-  
+    mean_bf<-mean(body_fat_percent, na.rm=T),
+    sd_bf<-sd (body_fat_percent, na.rm=T)
+  )
+
 ```
 
 1.  
@@ -64,13 +65,15 @@ fat %>%
 
     -   Review in the book: What are the assumptions about the data appropriate for a t-test? When you examine the plots and summary data, do they appear to meet those assumptions?
 
-    normallish distributed, independent data,
+    look for normallish distributed, independent data, equal variance
+
+    when eyeballing the data, we can very roughly assume a t
 
     -   Based on examination of the plots and summary data, do you expect that there is a statistically significant difference in mean body fat percentage between males and females in this sample?
 
     yes we expect a statistically significant difference
 
-2.  Conduct a t-test and then interpret the results. What do they tell you about the null vs. alternative hypotheses?
+    4.  Conduct a t-test and then interpret the results. What do they tell you about the null vs. alternative hypotheses?
 
     looking at a difference between two means, so we're running a t-test
 
@@ -78,4 +81,6 @@ fat %>%
     t.test(body_fat_percent ~ gender, data=fat)
     ```
 
-p is very low, we reject the null
+p is very low, we reject the null hypothesis (t = 2.8632, df = 20.957, p-value = 0.00932)
+
+it is very likely that there is a signifcant difference in body mass percent between genders
