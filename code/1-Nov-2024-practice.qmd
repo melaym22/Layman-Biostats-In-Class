@@ -107,12 +107,15 @@ I'll run a x^2 test
 ```{r}
 totals <- plants %>% group_by(plant_ht_class, treatment) %>% summarise(total.number = sum(plant_id))
 View(totals)
+
+total.number<- sum(plants$plant_id)
 ```
 ```{r}
 ggplot(totals, aes(x = treatment, y = total.number, fill = plant_ht_class))+
      geom_bar(stat = "identity", position = "dodge")
 ```
 not sure if there is an association, maybe control = tall, but maybe not
+
 
 
 make test
@@ -139,36 +142,35 @@ I am expecting that you will document your process clearly along the way.
 **workflow 2.1**
 
 
-predictor variable - control v hand pollinated plants (categorical, binary)
+predictor variable - plant height class (categorical, binary) AND treatment (categorical, binary)
 
-response variable - plant height class length (categorical, binary)
+response variable - number of flowers (continuous, discrete)
 
 I'll run a x^2 test
+
+
 
 "plot your data (and guess the answer!)
 
 ```{r}
-totals <- plants %>% group_by(plant_ht_class, treatment) %>% summarise(total.number = sum(plant_id))
-View(totals)
+ggplot(data=plants,
+  aes(y=num_flowers,x=treatment,colour=factor(plant_ht_class)))+
+  geom_boxplot() 
 ```
-```{r}
-ggplot(totals, aes(x = treatment, y = total.number, fill = plant_ht_class))+
-     geom_bar(stat = "identity", position = "dodge")
-```
-not sure if there is an association, maybe control = tall, but maybe not
+looks like plant height is definitely a predictor of num flowers, when combined with treatment I would predict there is an association between plant height class and treatment group and the number of flowers
 
 
 make test
 
 ```{r}
-plants.mat <- xtabs(plant_id ~ treatment + plant_ht_class, data = plants)
+plants.mat <- xtabs(num_flowers ~ treatment + plant_ht_class, data = plants)
 plants.mat
 ```
 
 ```{r}
 chisq.test(plants.mat)
 ```
-p is very low, suggests we should reject null hypothesis and conclude there is an association between the variables
+p is high, which suggests we should not reject null hypothesis and conclude there may not be an association between the variables (X-squared = 0.16277, df = 1, p-value = 0.6866)
 
 
 
@@ -181,3 +183,64 @@ The researchers wished to know if there is an association between corolla area a
 Your task is to determine the appropriate statistical test you should use to answer this question from the data and then proceed with the statistical analysis, using the "plot your data (and guess the answer!) -\> build your model -\> check your assumptions -\> interpret your model" workflow (for now, we will leave out the last step which is to make a better plot at the end).
 
 I am expecting that you will document your process clearly along the way.
+
+**workflow 3.1**
+
+
+predictor variable - corolla area (continuous, ratio) 
+response variable - spur length (continuous, ratio)
+
+I'll run a linear regression
+
+Plot the data
+
+```{r}
+plants2<- plants%>%
+  filter(treatment=="hand-pollinated")
+```
+
+
+```{r}
+ggplot(plants2,
+  aes(x=corolla_area_mm2, y=spur_length_mm))+
+    geom_point()+
+    theme_bw()
+```
+Interpreting the figure:
+
+looks like not much of a relationship - maybe slightly positive
+
+guesstimate the slope and intercept from the figure:
+
+y range: 15-7, x range: 128-26
+slope = 8/102 = 0.0784
+
+i would guess that the y-intercept is somewhere around 7-9
+
+
+Making a simple linear regression 
+```{r}
+model_plants <- lm(spur_length_mm~corolla_area_mm2, plants2)
+model_plants
+```
+okay looke like our slope was an over-estimate and our y int was just about right
+this is a very low slope, so its likely that there is no association between variables
+
+```{r}
+autoplot(model_plants, smooth.colour=NA)
+```
+okay let's check conditions:
+res v fit is flat line, says linear model is appropriate
+normal q-q shows normality in the data
+scale-location shows even variance - no pattern
+res v leverage shows a flat line, some more influential points but nothing of concern
+
+## Now the interpretation
+
+```{r}
+anova(model_plants)
+```
+```{r}
+summary(model_plants)
+```
+According to this output, the p value is  low, suggesting we reject our null hypothesis and should conclude that there is a positive relationship between spur length and corolla area. However, the adj r^2 value is also very low, so it is very likely that there is another predictor accounting for this association.  
