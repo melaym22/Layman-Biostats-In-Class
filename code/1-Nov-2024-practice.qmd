@@ -1,0 +1,183 @@
+---
+title: "Nov-1-2024-practice.qmd"
+format: html
+editor: visual
+---
+
+## Introduction
+
+At this point, you have learned to perform and interpret three different statistical tests: Chi-square test of association (contingency analysis), two-sample t-test and linear regression.
+
+Now it is time for you to practice what you've been learning. Please add the data set called "A_morio_2014_plants.csv" to your Biostats-In-Class RStudio project as you will need it for this exercise. The data are associated with [this paper in the journal Evolution](https://academic.oup.com/evolut/article/70/3/716/6852093?login=true) and come from [this repository on Dryad](https://datadryad.org/stash/dataset/doi:10.5061/dryad.nf663). The authors of the study were interested in the degree to which pollinators apply selective pressure on a variety of flower traits in a species of orchid plant. In the experiment, some of the orchids were allowed to experience natural pollination and were considered the control group, and another group of orchids was pollinated by hand by the researchers (the "hand-pollinated" treatment group).
+
+### Question 1
+
+The researchers wished to know whether spur length (the "spur" is a part of the flower that sticks out) of flowers differed between control and hand-pollinated plants.
+
+Your task is to determine the appropriate statistical test you should use to answer this question from the data and then proceed with the statistical analysis, using the "plot your data (and guess the answer!) -\> build your model -\> check your assumptions -\> interpret your model" workflow (for now, we will leave out the last step which is to make a better plot at the end).
+
+I am expecting that you will document your process clearly along the way.
+
+**workflow 1.2**
+
+first, setup code
+
+```{r}
+rm(list = ls())
+library(ggfortify)
+library(tidyverse)
+library(here)
+```
+
+next, read in data and clean it up
+
+```{r}
+plants<- read.csv(here("data", "A_morio_2014_plants.csv"))
+plants$treatment <- as.factor(plants$treatment)
+plants$plant_ht_class <- as.factor(plants$plant_ht_class)
+```
+
+predictor variable - control v hand pollinated plants (categorical, binary)
+
+response variable - spur length (continuous, ratio)
+
+I'll run a two-sample t test
+
+"plot your data (and guess the answer!)
+
+```{r}
+ggplot(plants,
+  aes(x=treatment, y=spur_length_mm))+
+    geom_boxplot()+
+    theme_bw()
+```
+
+from this i see that there may be a few outliers in the data
+
+the means do not appear to be significantly different from one another, but we will see
+
+```{r}
+ggplot(plants,aes(x=spur_length_mm))+
+  geom_histogram(binwidth=1)+
+  facet_wrap(~treatment,ncol=1) 
+  theme_bw()
+```
+
+check assumptions: looks roughly normally distributed, with even variance
+
+```{r}
+plants %>%
+  group_by(treatment)%>%
+  summarise(
+    mean_sl<-mean(spur_length_mm, na.rm=T),
+    sd_sl<-sd (spur_length_mm, na.rm=T)
+  )
+
+```
+
+from this, I would not expect significantly different means
+
+let's run the test
+
+```{r}
+t.test(spur_length_mm ~ treatment, data=plants)
+```
+
+interpret your model
+
+interestingly enough, we have a significant p value and can reject our null hypothesis. The mean spur length of the control is significantly higher than the mean spur length of the hand-pollinated (t = 2.0987, df = 308.83, p-value = 0.03666).
+
+**workflow 1.2**
+
+The researchers wished to know if there was an association between plant height class and treatment group and the number of flowers produced by orchid plants.
+
+Your task is to determine the appropriate statistical test you should use to answer this question from the data and then proceed with the statistical analysis, using the "plot your data (and guess the answer!) -\> build your model -\> check your assumptions -\> interpret your model" workflow (for now, we will leave out the last step which is to make a better plot at the end).
+
+I am expecting that you will document your process clearly along the way.
+
+
+predictor variable - control v hand pollinated plants (categorical, binary)
+
+response variable - plant height class length (categorical, binary)
+
+I'll run a x^2 test
+
+"plot your data (and guess the answer!)
+
+```{r}
+totals <- plants %>% group_by(plant_ht_class, treatment) %>% summarise(total.number = sum(plant_id))
+View(totals)
+```
+```{r}
+ggplot(totals, aes(x = treatment, y = total.number, fill = plant_ht_class))+
+     geom_bar(stat = "identity", position = "dodge")
+```
+not sure if there is an association, maybe control = tall, but maybe not
+
+
+make test
+
+```{r}
+plants.mat <- xtabs(plant_id ~ treatment + plant_ht_class, data = plants)
+plants.mat
+```
+
+```{r}
+chisq.test(plants.mat)
+```
+p is very low, suggests we should reject null hypothesis and conclude there is an association between the variables
+
+
+### Question 2
+
+The researchers wished to know if there was an association between plant height class and treatment group and the number of flowers produced by orchid plants.
+
+Your task is to determine the appropriate statistical test you should use to answer this question from the data and then proceed with the statistical analysis, using the "plot your data (and guess the answer!) -\> build your model -\> check your assumptions -\> interpret your model" workflow (for now, we will leave out the last step which is to make a better plot at the end).
+
+I am expecting that you will document your process clearly along the way.
+
+**workflow 2.1**
+
+
+predictor variable - control v hand pollinated plants (categorical, binary)
+
+response variable - plant height class length (categorical, binary)
+
+I'll run a x^2 test
+
+"plot your data (and guess the answer!)
+
+```{r}
+totals <- plants %>% group_by(plant_ht_class, treatment) %>% summarise(total.number = sum(plant_id))
+View(totals)
+```
+```{r}
+ggplot(totals, aes(x = treatment, y = total.number, fill = plant_ht_class))+
+     geom_bar(stat = "identity", position = "dodge")
+```
+not sure if there is an association, maybe control = tall, but maybe not
+
+
+make test
+
+```{r}
+plants.mat <- xtabs(plant_id ~ treatment + plant_ht_class, data = plants)
+plants.mat
+```
+
+```{r}
+chisq.test(plants.mat)
+```
+p is very low, suggests we should reject null hypothesis and conclude there is an association between the variables
+
+
+
+
+
+### Question 3
+
+The researchers wished to know if there is an association between corolla area and spur length in hand-pollinated flowers.
+
+Your task is to determine the appropriate statistical test you should use to answer this question from the data and then proceed with the statistical analysis, using the "plot your data (and guess the answer!) -\> build your model -\> check your assumptions -\> interpret your model" workflow (for now, we will leave out the last step which is to make a better plot at the end).
+
+I am expecting that you will document your process clearly along the way.
