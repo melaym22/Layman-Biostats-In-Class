@@ -1,0 +1,93 @@
+---
+title: "4-Nov-Forest_Trees"
+author: "ML"
+format: html
+editor: visual
+---
+
+## 
+
+# 11/4 In Class Exercise
+
+## One way ANOVA for Tree DBH
+
+workflow: plot-\>model-\>check assumptions-\>interpret-\>plot again
+
+setup per usual
+
+```{r}
+rm (list =ls())
+library(ggfortify)
+library(tidyverse)
+library(here)
+```
+
+read in data to use
+
+```{r}
+trees <- read.csv(here("data", "Forest_Tree_DBH_F21.csv"))
+trees$Forest<-as.factor(trees$Forest)
+```
+
+plot
+
+```{r}
+ggplot(trees, 
+  aes(x=Forest, y=DBH_cm))+
+  geom_boxplot()+
+  theme_bw()
+```
+Okay interesting - Degrasse definitely looks higher... the rest who knows
+
+construct model
+
+```{r}
+model_tree<-lm(DBH_cm ~ Forest, data=trees)
+model_tree
+```
+check assumptions
+
+```{r}
+autoplot(model_tree)
+```
+looks good - normality is maybe skewed on the right end, but i will proceed
+
+lets run the anova
+
+```{r}
+anova(model_tree)
+```
+okay we have a significant p value, so we can reject the null and conclude that at least one of the groups (its mean DBH) is significantly different from another
+
+## treatment contrasts
+
+get summary table
+
+```{r}
+summary(model_tree)
+```
+```{r}
+sumDat<- trees%>%
+  group_by(Forest)%>%
+    summarise(meanGR=mean(DBH_cm))
+sumDat
+```
+
+follow up with post-hoc tests!
+
+tukey test
+```{r}
+phc1<-glht(model_tree, linfct = mcp(Forest="Tukey")) #mcp = multiple comparisons
+summary(phc1)
+
+```
+
+
+
+ask for a compact letter display
+```{r}
+cld(phc1)
+```
+
+this tells us that degrasse and south hammond are statistically different in means
+
