@@ -37,6 +37,7 @@ ggplot(trees,
   geom_boxplot()+
   theme_bw()
 ```
+
 Okay interesting - Degrasse definitely looks higher... the rest who knows
 
 construct model
@@ -45,11 +46,13 @@ construct model
 model_tree<-lm(DBH_cm ~ Forest, data=trees)
 model_tree
 ```
+
 check assumptions
 
 ```{r}
 autoplot(model_tree)
 ```
+
 looks good - normality is maybe skewed on the right end, but i will proceed
 
 lets run the anova
@@ -57,6 +60,7 @@ lets run the anova
 ```{r}
 anova(model_tree)
 ```
+
 okay we have a significant p value, so we can reject the null and conclude that at least one of the groups (its mean DBH) is significantly different from another
 
 ## treatment contrasts
@@ -66,6 +70,7 @@ get summary table
 ```{r}
 summary(model_tree)
 ```
+
 ```{r}
 sumDat<- trees%>%
   group_by(Forest)%>%
@@ -76,18 +81,17 @@ sumDat
 follow up with post-hoc tests!
 
 tukey test
+
 ```{r}
 phc1<-glht(model_tree, linfct = mcp(Forest="Tukey")) #mcp = multiple comparisons
 summary(phc1)
 
 ```
 
-
-
 ask for a compact letter display
+
 ```{r}
 cld(phc1)
 ```
 
 this tells us that degrasse and south hammond are statistically different in means
-

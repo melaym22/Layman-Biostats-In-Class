@@ -1,0 +1,57 @@
+---
+title: "Cast and Join"
+format: html
+editor: visual
+---
+
+# 11/20 Casting and Joining
+
+setup per usual
+
+```{r}
+rm (list =ls())
+library(ggfortify)
+library(tidyverse)
+library(here)
+```
+
+read in data to use
+
+```{r}
+cams <- read.csv(here("data", "site_locations.csv"))
+species <- read.csv(here("data", "species_per_site.csv"))
+```
+
+pivot_wider() function to change the format so we have a column for each date
+
+```{r}
+sp_wide<-species%>%
+  pivot_wider(
+    names_from=Date,
+    values_from=Num_species
+  )
+View(sp_wide)
+```
+
+pivot_longer() function to take the y data frame and mush columns into one long column
+
+```{r}
+sp_long<-sp_wide%>%
+  pivot_longer(
+    cols=c(`1-Jul-24`:`15-Jul-24`),
+    names_to="Date", 
+    values_to="Num_species"
+  )
+View(sp_long)
+```
+
+## Joining Dataframes
+
+if two dataframes have at least one of the same variable, we can match them and create one big dataframe
+
+getting the latitude and longitude data from cams and add it to species using join() function
+
+```{r}
+cams_species<-full_join(species,cams) #df1 gets added to from df2, full_join(df1,df2), use "by=variable" to assign the shared column
+View(cams_species)
+```
