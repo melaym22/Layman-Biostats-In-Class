@@ -52,6 +52,6 @@ if two dataframes have at least one of the same variable, we can match them and 
 getting the latitude and longitude data from cams and add it to species using join() function
 
 ```{r}
-cams_species<-full_join(species,cams) #df1 gets added to from df2, full_join(df1,df2), use "by=variable" to assign the shared column
+cams_species<-full_join(species,cams) #df1 gets added to from df2, full_join(df1,df2), use "by=join_by(variable)" to assign the shared column
 View(cams_species)
 ```
