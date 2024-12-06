@@ -166,7 +166,7 @@ So now let's drop the variables that are highly correlated from our dataframe.
 ```{r}
 drop <- c("ForestSimpson", "ForestSR", "meanTreeDensity", "meanSeedlingSaplingDensity", "meanTreeDominance", "meanSeedlingSaplingDensity", "P_Evergreen50","P_Wetland50")
 
-cams <- cams %>% select(-drop)
+cams <- cams %>% dplyr::select(-drop)
 ```
 
 Now we have 55 observations and 23 variables, of which 21 are possible predictor variables. That is still a LOT of predictor variables! Let's write that result to use in our models.
